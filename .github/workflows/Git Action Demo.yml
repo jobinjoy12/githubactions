@@ -1,0 +1,43 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main  # or master, depending on your repo
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - uses: actions/checkout@v3
+
+    - name: run a one line script
+      run: echo "Hello, World!"
+
+    - name: Run a multiline script
+      run: |
+        echo "This is a multiline script"
+        echo "It can contain multiple commands"
+        echo "Each command will be executed in sequence"
+
+  build-api:
+    runs-on: windows-latest
+    steps:
+      - run : echo "Building api"      
+  
+  build-db:
+     needs: build
+    runs-on: windows-latest
+    steps:
+      - run : echo "Building the database"
+  
+  packaging :
+     needs: [build, build-db]
+     runs-on: macos-latest
+     steps:
+       - run: echo "Packaging the application"
